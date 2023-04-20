@@ -22,21 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        videoAdapter = VideoAdapter { videoItem ->
-            binding.motionLayout.setTransition(R.id.collapse, R.id.expand)
-            binding.motionLayout.transitionToEnd()
-            play(videoItem)
-        }
-
-        binding.motionLayout.jumpToState(R.id.collapse)
-
-        with(binding.rvVideoList) {
-            layoutManager = LinearLayoutManager(context)
-            adapter = videoAdapter
-        }
-
-        val videoList = readData("video.json", VideoList::class.java) ?: VideoList(emptyList())
-        videoAdapter.submitList(videoList.videos.toList())
+        initMotionLayout()
+        initVideoRecyclerView()
     }
 
     override fun onStart() {
@@ -62,11 +49,32 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    private fun initMotionLayout() {
+        binding.motionLayout.targetView = binding.videoPlayerContainer
+        binding.motionLayout.jumpToState(R.id.collapse)
+    }
+
     private fun initExoPlayer() {
         player = ExoPlayer.Builder(this@MainActivity).build()
             .also {
                 binding.playerView.player = it
             }
+    }
+
+    private fun initVideoRecyclerView() {
+        videoAdapter = VideoAdapter { videoItem ->
+            binding.motionLayout.setTransition(R.id.collapse, R.id.expand)
+            binding.motionLayout.transitionToEnd()
+            play(videoItem)
+        }
+
+        with(binding.videoListRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = videoAdapter
+        }
+
+        val videoList = readData("video.json", VideoList::class.java) ?: VideoList(emptyList())
+        videoAdapter.submitList(videoList.videos.toList())
     }
 
     private fun play(item: VideoItem) {
