@@ -15,9 +15,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        videoAdapter = VideoAdapter()
+        videoAdapter = VideoAdapter { videoItem ->
+            binding.motionLayout.setTransition(R.id.collapse, R.id.expand)
+            binding.motionLayout.transitionToEnd()
+        }
 
-        with(binding.rvVideo) {
+        binding.motionLayout.jumpToState(R.id.collapse)
+
+        with(binding.rvVideoList) {
             layoutManager = LinearLayoutManager(context)
             adapter = videoAdapter
         }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import hs.project.comettube.databinding.ItemVideoBinding
 
-class VideoAdapter : ListAdapter<VideoItem, VideoAdapter.ViewHolder>(
+class VideoAdapter(private val onClick: (VideoItem) -> Unit) : ListAdapter<VideoItem, VideoAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<VideoItem?>() {
         override fun areItemsTheSame(oldItem: VideoItem, newItem: VideoItem): Boolean {
            return oldItem.id == newItem.id
@@ -25,6 +25,10 @@ class VideoAdapter : ListAdapter<VideoItem, VideoAdapter.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: VideoItem) {
+            binding.root.setOnClickListener {
+                onClick.invoke(item)
+            }
+
             binding.tvTitle.text = item.title
             binding.tvSubtitle.text = binding.root.context.getString(R.string.video_sub_title, item.channelName, item.viewCount, item.dateText)
 
