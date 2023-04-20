@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CometTube</string>
+    <string name="video_sub_title">%s * 조회수 %s * %s</string>
+</resources>
